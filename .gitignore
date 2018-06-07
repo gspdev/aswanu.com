@@ -1,5 +1,7 @@
 /app/etc/local.xml
 /downloader/*.cfg
+/downloader/.cache/
+/oceanpayment_log/
 /media/
 /var/
 /.idea/
