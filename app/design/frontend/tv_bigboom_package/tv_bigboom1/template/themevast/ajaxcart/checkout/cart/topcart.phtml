@@ -1,0 +1,122 @@
+<?php
+$_cartQty = $this->getSummaryCount();
+
+$_webMiniCartUrl = Mage::getBaseUrl();
+?>
+<div id ="mini_cart_block">
+    <div class="block-cart mini_cart_ajax">
+            <div class="block-cart">
+                <?php $_cartQty = $this->getSummaryCount() ?>
+                <div class="cart-mini-title">
+                    <a class="shopping-cart hidden-xs" href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>">
+                    <span class="cart-count"><?php if($_cartQty<1) { echo $this->__('0'); } else { echo $_cartQty; } ?></span>
+						<span class="cartText hidden-xs">Cart</span>
+					</a>
+					<a class="shopping-cart visible-xs hidden-sm" href="<?php echo "javascript:void(0)" ?>">
+                    <span class="cart-count"><?php if($_cartQty<1) { echo $this->__('0'); } else { echo $_cartQty; } ?></span>
+						<span class="cartText hidden-xs">Cart</span>
+					</a>
+                </div>
+                <div class="top-line"></div>
+                <div class="top-cart-content">
+                    <?php $_items = $this->getRecentItems() ?>
+                    <?php if (count($_items)): ?>
+                        <ol id="cart-sidebar" class="mini-products-list">
+                            <?php foreach ($_items as $_item): ?>
+                                <?php echo $this->getItemHtml($_item) ?>
+                            <?php endforeach; ?>
+                        </ol>
+                        <script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+                        <script type="text/javascript">
+                            jQuery(document).ready(function ($j) {
+                                $j("#cart-sidebar .item").each(function(){
+                                    var $itemBox = $j(this).children(".product-details");
+                                    var $qtyBox = $j(this).find(".product-qty");
+                                    var item_id = $itemBox.find(".product_id").val();
+                                    $itemBox.find(".qtyBtn").click(function(){
+                                        if($j(this).hasClass("qtyAdd")){
+                                            item_qty = parseInt($qtyBox.text())+1;
+                                            $qtyBox.text(item_qty);
+                                            ajaxMiniCart(item_id,item_qty);
+                                        }else if($j(this).hasClass("qtyReduce")){
+                                            item_qty = parseInt($qtyBox.text());
+                                            if(item_qty>1){
+                                                item_qty -=1;
+                                                $qtyBox.text(item_qty);
+                                                ajaxMiniCart(item_id,item_qty);
+                                            }else if(item_qty <=1){
+                                                alert("Minimum Qty Allowed in Shopping Cart is 1 !");
+                                            }
+                                        }
+                                    });
+                                });
+                                /*
+                                * ajaxMiniCart
+                                * product_id,qty,method('update')
+                                * */
+                                function ajaxMiniCart(id, itemqty){
+                                    try{
+                                            $j.ajax({
+                                                url:'<?php echo $_webMiniCartUrl."/mivec/checkout/cart/update.php"?>',
+                                                dataType:'json',
+                                                type:'post',
+                                                async:true,
+                                                data:{'product_id':id,'qty':itemqty,'method':'update'},
+                                                beforeSend: function(){ loadingAjaxcart(true);},
+                                                success:function (data) {
+                                                    loadingAjaxcart(false);
+                                                },
+                                                complete: function(XMLHttpRequest, textStatus) {
+                                                    if(textStatus!=='success'){
+                                                        showBoxInfo('<div class ="ajaxcartReponse"><p class ="info">Can&acute;t update cart now</p></div>');
+                                                        return false;
+                                                    }
+                                                    sumMiniCart();
+                                                    showBoxInfo('<div class ="ajaxcartReponse"><p class ="info">Your cart has been updated.</p></div>');
+                                                },
+                                                error: function(XMLHttpRequest, textStatus, errorThrown){
+                                                    showBoxInfo('<div class ="ajaxcartReponse"><p class="info">Can&acute;t update cart now,please try again</p></div>')
+                                                }
+                                            });
+                                    }catch (e){
+                                        alert('Have error ajaxcart here you checkout none ajax');
+                                        return false;
+                                    }
+                                }
+                                function sumMiniCart() {
+                                    var sumItem = 0;
+                                    var sumTotal = 0;
+                                    $j.each($j("#cart-sidebar li"),function(){
+                                        sumItem += parseInt($j(this).find(".product-qty").text());
+                                        sumTotal += parseInt($j(this).find(".product-qty").text())*$j(this).find("span.price").text().split("$")[1];
+                                    });
+                                    $j(".cart-mini-title .cart-count").text(sumItem);
+                                    $j(".top-subtotal .price").text(sumTotal);
+                                }
+                            });
+                        </script>
+                    <?php else: ?>
+                        <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+                    <?php endif ?>
+                    <div class="top-subtotal"><?php echo $this->__('Subtotal') ?>: <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></div>
+                    <?php if ($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+                        <div class="actions clearfix">
+                            <?php echo $this->getChildHtml('extra_actions') ?>
+                            <a href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>" class="left action_cart">Update</a>
+                            <button type="button" title="<?php echo $this->__('Checkout') ?>" class="button right" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><span><span><?php echo $this->__('Checkout') ?></span></span></button>
+                        </div>
+                    <?php else:?>
+                        <div class="actions clearfix">
+                            <?php echo $this->getChildHtml('extra_actions') ?>
+                            <a href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>" class="left action_cart">View Shopping Cart</a>
+                        </div>
+                    <?php endif ?>
+                </div>
+            </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var ajaxCartCfg = {
+        'removeConfirm' : '<?php echo $this-> __('Are you sure you would like to remove this item ?') ?>',
+    };
+</script>

@@ -1,0 +1,291 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php 
+	$session = Mage::getSingleton('customer/session');
+	$status = $session->isLoggedIn();
+	$customer_data = Mage::getModel('customer/customer')->load($session->id);
+	//print_r($customer_data->getData());exit;
+?>
+                    
+<header class="header-wrapper">
+    <div id="header-special-offer">
+        <div class="container">
+            <div class="promotion">
+                <span class="header-special-offer-close"><i class="fa fa-times"></i></span>
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('promotion')->toHtml() ?>
+            </div>
+        </div>
+    </div>
+    <div class="header-quick-access">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-4">
+                    <div class="quick-access">
+                        
+						<div class="header-left">
+						    <span class="hidden-xs"><?php echo $this->getChildHtml('welcome') ?></span>
+							<?php if (empty($session->getId())):?>
+                             <a href="<?php echo $this->getUrl('customer/account/login')?>" title="Sign in" class="signin">Sign in</a>
+                             Or
+							 <a class="head-Join register" href="<?php echo $this->getUrl("customer/account/create")?>" title="Join">Join<span class="hidden-xs"> Free</span></a>
+                             <?php else:?>
+                             <a href="<?php echo $this->getUrl('customer/account/logout')?>">Logout</a>
+                            <?php endif;?>
+						</div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9 col-lg-8">
+                    <div class="header-toplinks">
+						<div class="language-currency">
+							<div class="header-language">
+									<?php echo $this->getChildHtml('store_language') ?>
+							</div>
+							<script type="text/javascript">
+								jQuery(document).ready(function($){
+									if($(document).width()<=767){
+										$(".drop-lang .drop-trigger").find("a").first().attr('href','javascript:void(0)');
+									}
+								});
+							</script>
+							<div class="header-currency">
+								<?php echo $this->getChildHtml('currency_top') ?>
+							</div>
+						</div>
+						<?php echo $this->getChildHtml('topLinks') ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 search-left">
+                        <?php if ($this->getIsHomePage()):?>
+                        <h1 class="logo"><strong><?php echo $this->getLogoAlt() ?></strong>
+                            <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo">
+                                <img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" />
+                                <img class="img_m" src="<?php echo '/skin/frontend/tv_bigboom_package/tv_bigboom1/images/logo_m.png' ?>" alt="<?php echo $this->getLogoAlt() ?>" />
+                            </a>
+                        </h1>
+                        <?php else:?>
+                        <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo">
+                            <strong><?php echo $this->getLogoAlt() ?></strong>
+                            <img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" />
+                            <img class="img_m" src="<?php echo '/skin/frontend/tv_bigboom_package/tv_bigboom1/images/logo_m.png' ?>" alt="<?php echo $this->getLogoAlt() ?>" />
+                        </a>
+                        <?php endif?>
+                    </div>
+                    <div class="col-xs-10 col-sm-6 col-md-6 col-lg-6 search-box">
+                        <?php echo $this->getChildHtml('topSearch') ?>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 f-right search-right-box">
+						<div class="search-right clear_fix">
+							<div class="head-Cart fl">
+								<a href="<?php echo$this->getUrl('checkout/cart')?>" class="forPc"></a>
+                                <a href="javascript:void(0)" class="forMobile">
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </a>
+								<div class="header-cart-mini">
+									<div class="topcart-mini-container">
+										<?php echo $this->getChildHtml('top_cart_mini') ?>
+									</div>
+								</div>
+							</div>
+							<div class="head-Wishlist fl hidden-xs">
+							<?php //edit herf by jerry?>
+
+								<a class="wishMask" href="<?php echo $this->getUrl('wishlist') ?>"></a>
+								<a class="wishText" href="javascript:void(0)">
+									<span>Wish</span>
+									<span>List<?php if($status):?>
+                                            <b class="wish-num" style="color: #ef6554;"><?php
+                                             $customer = $session->getCustomer();
+                                             $wishlist = Mage::getModel('wishlist/wishlist')->loadByCustomer($customer, true);
+                                             if($wishlist->getItemsCount()>0){
+                                                 echo '('.$wishlist->getItemsCount().')';
+                                             }
+                                             ?></b><?php endif;?></span>
+								</a>
+							</div>
+							<div class="head-My fl">
+								<a href="<?php echo $this->getUrl('customer/account')?>" class="myAccount forPc"></a>
+                                <a href="javascript:void(0)" class="myAccount forMobile"><i class="fa fa-user" aria-hidden="true"></i></a>
+								<a class="myText signin hidden-xs" href="<?php echo $this->getUrl('customer/account') ?>">
+                                <?php if (!empty($session->getId())):?>
+									<span>Hi,<i><?php echo $customer_data->getLastname()?></i></span>
+									<span>My Account</span>
+                                <?php else:?>
+                                	<span>Welcome !</span>
+									<span>Sign in</span>
+                                <?php endif;?>
+								</a>
+								<a class="myText signin visible-xs hidden-sm" href="<?php echo 'javascript:void(0)' ?>">
+                                <?php if (!empty($session->getId())):?>
+									<span>Hi,<i><?php echo $customer_data->getLastname()?></i></span>
+									<span>My Account</span>
+                                <?php else:?>
+                                	<span>Welcome !</span>
+									<span>Sign in</span>
+                                <?php endif;?>
+								</a>
+								<div class="top-Line"></div>
+								<div class="my-Drop">
+                                <?php if (empty($session->getId())):?>
+									<a href="<?php echo $this->getUrl('customer/account/login') ?>" title="Sign in" class="myDrop-Sign signin">Sign in</a>
+									<p class="myDrop-Join">New to Aswanu? <a href="<?php echo $this->getUrl('customer/account/create') ?>" title="Join Free" class="register">Join Free</a></p>
+                                <?php endif;?>
+									<ul class="myDrop-List">
+										<li><i class="fa fa-user" aria-hidden="true"></i><a href="<?php echo $this->getUrl('customer/account/')?>">My Aswasu</a></li>
+										<li><i class="fa fa-file-text" aria-hidden="true"></i><a href="<?php echo $this->getUrl('sales/order/history')?>">My Orders</a></li>
+										<li><i class="fa fa-pencil-square-o" aria-hidden="true"></i><a href="<?php echo $this->getUrl('review/customer/')?>">My Reviews</a></li>
+										<li><i class="fa fa-heart" aria-hidden="true"></i><a href="<?php echo $this->getUrl('wishlist')?>">My Favorites</a></li>
+										<li><i class="fa fa-list-ul" aria-hidden="true"></i><a href="<?php echo $this->getUrl('vendorquote')?>">My Product Quote</a></li>
+									</ul>
+									<a class="myDrop-Request" href="mailto:Marketing@aswanu.com">Submit a Buying Request</a>
+									<p class="grey">Let us help you find what you need</p>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div> 
+            </div>
+        </div>
+	</div>
+	<div class="nav-container-box">
+		<div class="container">
+			<?php echo $this->getChildHtml('topMenu') ?>
+		</div>
+	</div>
+    <?php echo $this->getChildHtml('topContainer'); ?>
+</header>
+<script type="text/javascript">
+    //jQuery(document).ready(function($){
+        //if(!localStorage._promotion_close){
+            //$("#header-special-offer .promotion").show();
+        //}
+        //$("#header-special-offer .promotion .header-special-offer-close").click(function(){
+            //localStorage._promotion_close = '1';
+        //});
+    //});
+    jQuery(document).ready(function($){
+        if($(document).width() < 767){
+            $(".page-header-content .search-left").after("<div class='col-xs-2 mobile-menu-box hidden-sm'><i class='fa fa-bars'></i></div>"
+            +"<div class='col-xs-2 mobile-search-box'><i class='fa fa-search'></i></div>");
+        }
+        $(".mobile-menu-box").delegate(".fa-bars","click",function(){//mobile menu
+            $("#navbar-inner .navbar-toggle").click();
+            if($('.search-box').hasClass("search-selected")){
+                $(".page-header-content .search-box").removeClass("search-selected").hide();
+            }
+        });
+        $(".mobile-search-box").delegate(".fa-search","click",function(e){//mobilde search
+            if($("#navbar-inner").hasClass("navbar-active")){
+                $("#navbar-inner .navbar-toggle").click();
+            }
+            if($('.search-box').hasClass("search-selected") && $("#search").val().length === 27){
+                var event = event || window.event;
+                event.preventDefault(); // Compatible standard Browsers
+                window.event.returnValue = false; // Compatible IE6~8
+                $(".page-header-content .search-box").removeClass("search-selected").hide();
+                return false;
+            }
+
+            if($('.search-box').hasClass("search-selected")){
+                $("#search_mini_form").submit();
+            }
+            if(!$('.search-box').hasClass("search-selected")){
+                $(".page-header-content .search-box").addClass("search-selected").show();
+            }
+        });
+        $(".search-right .forMobile").click(function(){
+            hideMenu();
+        });
+        function hideMenu(){
+            if($("#navbar-inner").hasClass("navbar-active")){
+                $("#navbar-inner .navbar-toggle").click();
+            }
+        }
+        $("#header-special-offer .promotion .header-special-offer-close").click(function () {
+            delCookie("notice");
+            setCookie("notice","0","h20");
+        });
+        //checkNotice();
+        function checkNotice() {
+            var isBlock = getCookie("notice");
+            if(isBlock == null || isBlock == "" || isBlock == "1"){
+                jQuery("#header-special-offer .promotion").css("display","block");
+                setCookie("notice","1","h1")
+            }
+        }
+        function setCookie(name,value,time)
+        {
+            var strsec = getsec(time);
+            var exp = new Date();
+            exp.setTime(exp.getTime() + strsec*1);
+            document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+        }
+        function getsec(str)
+        {
+            var str1=str.substring(1,str.length)*1;
+            var str2=str.substring(0,1);
+            if (str2=="s")
+            {
+                return str1*1000;
+            }
+            else if (str2=="h")
+            {
+                return str1*60*60*1000;
+            }
+            else if (str2=="d")
+            {
+                return str1*24*60*60*1000;
+            }
+        }
+        function getCookie(name)
+        {
+            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+            if(arr=document.cookie.match(reg))
+                return unescape(arr[2]);
+            else
+                return null;
+        }
+        function delCookie(name)
+        {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            var cval=getCookie(name);
+            if(cval!=null)
+                document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+        }
+    });
+</script>
+

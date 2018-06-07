@@ -1,0 +1,54 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * @see Mage_Page_Block_Template_Links
+ */
+?>
+<?php $_links = $this->getLinks(); ?>
+<?php if(count($_links)>0): ?>
+<ul class="links hidden-xs"<?php if($this->getName()): ?> id="<?php echo $this->getName() ?>"<?php endif;?>>
+	<li class="first" >
+		<a href="#" title="Seller" >Seller<span class="spanDown"></span></a>
+		<ul class="headNav-DropList">
+			<li><a href="javascript:void(0)">My Shop</a></li>
+			<li><a href="javascript:void(0)">Order Management</a></li>
+			<li><a href="javascript:void(0)">Seller Forum</a></li>
+			<li><a href="javascript:void(0)">About Us</a></li>
+		</ul>
+	</li>
+	<li ><a href="<?php echo $this->getUrl('privacy-policy') ?>" title="Buyer Protection" >Buyer Protection</a></li>
+    <li class="help last">
+		<a href="<?php echo $this->getUrl('more-contact') ?>" title="Help">Help<span class="spanDown"></span></a>
+		<ul class="headNav-DropList">
+			<li><a href="<?php echo $this->getUrl('more-contact') ?>">Help Center</a></li>
+			<li><a href="<?php echo $this->getUrl('customer-service') ?>">Customer Service</a></li>
+			<li><a href="mailto:service@aswanu.com" target="_blank">Submit a Complaint</a></li>
+		</ul>
+	</li>
+</ul>
+<?php endif; ?>

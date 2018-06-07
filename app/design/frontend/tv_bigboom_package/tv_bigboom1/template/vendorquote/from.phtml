@@ -1,0 +1,1326 @@
+<?php $repairUrl = Mage::getBaseUrl(); ?>
+<style>
+    .messages {
+        margin: 20px 0 0 0 !important;
+    }
+
+    .repair-form {
+        max-width: 740px;
+        margin: 0 auto;
+    }
+
+    @media only screen and (max-width: 770px) {
+        .repair-form {
+            text-align: center;
+        }
+    }
+
+    .page-title.repair-head {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-title.repair-head h1 {
+        margin: 40px 0 20px 0;
+        text-align: center;
+        text-transform: capitalize;
+        color: #434343;
+        font: 700 30px/1.15 "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    }
+
+    .repair-title {
+        text-transform: capitalize;
+        color: #434343;
+        font: 700 20px/1.35 "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        margin: 2rem 0 1rem;
+        text-align: left;
+    }
+
+    .repair-title span {
+        font: 700 20px/1.35 "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    }
+
+    .repair-title .repair-step + span {
+        display: inline-block;
+        line-height: 40px;
+        vertical-align: top;
+    }
+
+    .repair-step {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        background: #2194d3;
+        color: #fff;
+        line-height: 40px;
+        border-radius: 20px;
+        font-size: 30px;
+        margin: 0 10px;
+        text-align: center;
+    }
+
+    .repair-step > span {
+        font: 700 30px/1.35 "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    }
+
+    .repair-form h4 {
+        margin-top: 1.6em;
+        color: #333333;
+        font: 600 16px/1.35 "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        text-align:left;
+    }
+
+    .listBox {
+        padding: 0 0 40px 0;
+        background: #f9f9f9;
+        border: 1px solid #2194d3;
+        border-radius: 2px;
+    }
+
+    .listBox h4 {
+        color: #fc6908;
+    }
+
+    .repair-form button {
+        margin-top: 2em;
+        float: right;
+    }
+
+    .repair-form input {
+        width: 100%;
+    }
+
+    .repair-form textarea {
+        width: 100%;
+        height: 150px;
+        resize: none;
+    }
+
+    .repair-form textarea.small {
+        width: 100%;
+        height: 75px;
+    }
+
+    #poll-answers li label, #shipping-store li label {
+        font: 500 14px/1.55 "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        color: #000;
+    }
+
+    #order,#select_imgBox .btn-close {
+        background-color: #2194d3;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 14px;
+        text-transform: uppercase;
+        padding: 9px 14px;
+        -webkit-appearance: none;
+        transition: all linear 0.25s;
+        -webkit-transition: all linear 0.25s;
+        -moz-transition: all linear 0.25s;
+        -o-transition: all linear 0.25s;
+    }
+    #order, #select_imgBox .btn-close{
+        margin-bottom:0;
+    }
+    #order:focus, #order:hover {
+        background-color: #666;
+        border-color: #666;
+    }
+
+    .categoryList {
+        display: none;
+        position: absolute;
+        z-index: 100;
+        background: #fff;
+        width: 80%;
+        max-height: 200px;
+        padding: 0;
+        overflow-y: auto;
+    }
+
+    .categoryList.active {
+        display: block;
+        border: 1px solid #c1c4bc;
+    }
+
+    .categoryList li {
+        padding: 4px 10px;
+    }
+
+    .categoryList li:hover {
+        background: #c1c4bc;
+        color: #fff;
+    }
+
+    .categoryList li .img, .categoryList li .name {
+        display: inline-block;
+        float: left;
+    }
+
+    .categoryList li .img {
+        width: 60px;
+        height: 60px;
+        float: left;
+    }
+
+    .categoryList li .name {
+        padding: 20px 20px 10px 0;
+    }
+
+    .listBox .title {
+        position: relative;
+        padding: 0 10px;
+        border: 1px solid #cccccc;
+        color: #000;
+        height: 36px;
+        line-height:36px;
+        cursor: pointer;
+        background: #ffffff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        transition:all 0.22s ease;
+        -webkit-transition:all 0.22s ease;
+        -moz-transition:all 0.22s ease;
+        -o-transition:all 0.22s ease;
+    }
+
+    .listBox .disabled .title {
+        background: #f1f1f1;
+    }
+
+    /*.listBox .head::after {
+        content: '';
+        position: absolute;
+        right: 6px;
+        top: 14px;
+        border-style: solid;
+        border-width: 5px;
+        border-color: #666 transparent transparent;
+    }*/
+
+    .listBox .title.loading::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 9px;
+        right: 6px;
+        border-style: solid;
+        border-color: #2db8c7;
+        border-width: 4px;
+        border-radius: 50%;
+        animation: loading 2s linear infinite alternate;
+        -webkit-animation: loadCategory 700ms linear infinite alternate;
+        -moz-animation: loadCategory 700ms linear infinite alternate;
+        -o-animation: loadCategory 700ms linear infinite alternate;
+    }
+
+    @keyframes loadCategory {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(0.1);
+        }
+    }
+
+    @-webkit-keyframes loadCategory {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(0.1);
+        }
+    }
+
+    @-moz-keyframes loadCategory {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(0.1);
+        }
+    }
+
+    @-o-keyframes loadCategory {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(0.1);
+        }
+    }
+
+    .title .img {
+        display: inline-block;
+        vertical-align: middle;
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+        border-radius: 50%;
+    }
+
+    .title .img > img {
+        height: 100%;
+    }
+
+    .categoryList > span {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: inline-block;
+        vertical-align: top;
+        margin: 20px 10px 10px 5px;
+    }
+
+    .categoryList li .img {
+        /*-moz-box-shadow: inset 0 0 30px rgba(0, 0, 0, .3);
+        -webkit-box-shadow: inset 0 0 30px rgba(0, 0, 0, .3);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, .3);*/
+        margin: 10px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        /*background-size: contain;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;*/
+    }
+
+    #description {
+        border: 1px solid #2194d3;
+    }
+
+    .categoryList li .img > img {
+        height: 100%;
+    }
+
+    .repair-table {
+        height: 240px;
+        border: 1px solid #2194d3;
+        overflow-y: auto;;
+    }
+
+    @media (max-width: 767px) {
+        .repair-table {
+            width: 100%;
+        }
+    }
+    #repairs {width:100%;}
+    #repairs thead {
+        display: none;
+    }
+
+    #repair tr {
+        height: 40px;
+    }
+
+    #repairs td {
+        vertical-align: middle;
+    }
+
+    #repairs td.name {
+        max-width: 70%;
+    }
+
+    #repairs .img span img {
+        cursor: pointer;
+    }
+
+    td.img > span {
+        display: block;
+        width: 30px;
+        height: 30px;
+        margin: 0 0 8px 5px;
+    }
+
+    thead td {
+        font-weight: 700;
+        text-align: center;
+    }
+    .select_num{padding-bottom:10px;}
+    thead td.name,thead td.sku,thead td.user_price_box {
+        text-align: left
+    }
+
+    td.sku, td.name, td.check {
+        padding: 0 12px;
+    }
+    td.note{
+        min-width:200px;
+        text-align:right;
+    }
+    .repair-selected {
+        margin-top: 20px;
+        padding: 4px;
+    }
+
+    #products-selected li .remove {
+        cursor: pointer;
+        border: 1px solid #434343;
+        background: #f57c7c;
+        color: #fff;
+        padding: 2px 4px;
+        margin: 0 0 0 10px;
+        border-radius: 5px;
+    }
+
+    #products-selected li {
+        line-height: 30px;
+
+        color: #333;
+    }
+
+    #poll-answers input.radio, #shipping-store input.radio {
+        float: right;
+        width: 20%;
+        margin-right: 40%;
+    }
+
+    /*loading*/
+    #ajaxloading, #ajaxerror {
+        display: none;
+    }
+
+    #ajaxloading.loading, #ajaxerror.loading {
+        display: block;
+    }
+
+    #ajaxloading.loading {
+        margin-left: -25px;
+    }
+
+    #ajaxloading, #ajaxloading.loading {
+        display: none \9;
+    }
+
+    .spinner {
+        margin: 100px auto;
+        width: 50px;
+        height: 60px;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .spinner > div {
+        background-color: #2194d3;
+        height: 100%;
+        width: 6px;
+        display: inline-block;
+
+        -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+        animation: stretchdelay 1.2s infinite ease-in-out;
+    }
+
+    .spinner .rect2 {
+        -webkit-animation-delay: -1.1s;
+        animation-delay: -1.1s;
+    }
+
+    .spinner .rect3 {
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+
+    .spinner .rect4 {
+        -webkit-animation-delay: -0.9s;
+        animation-delay: -0.9s;
+    }
+
+    .spinner .rect5 {
+        -webkit-animation-delay: -0.8s;
+        animation-delay: -0.8s;
+    }
+
+    .repair-form .nav-down-arrow {
+        display: block;
+        right: 10px;
+        top: 16px;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 4.5px 0 4.5px;
+        border-color: #000000 transparent transparent transparent;
+        line-height: 0px;
+    }
+
+    .form-list .notice {
+        color: #2db8c7;
+        font-size: 14px;
+    }
+
+    .title .nav-down-arrow.loading {
+        display: none;
+    }
+
+    #ie_ajax {
+        display: none;
+    }
+
+    #ie_ajax.loading {
+        display: block \9;
+    }
+
+    @-webkit-keyframes stretchdelay {
+        0%, 40%, 100% {
+            -webkit-transform: scaleY(0.4)
+        }
+        20% {
+            -webkit-transform: scaleY(1.0)
+        }
+    }
+
+    @keyframes stretchdelay {
+        0%, 40%, 100% {
+            transform: scaleY(0.4);
+            -webkit-transform: scaleY(0.4);
+        }
+        20% {
+            transform: scaleY(1.0);
+            -webkit-transform: scaleY(1.0);
+        }
+    }
+
+    #repair-block { /*display: none;*/
+    }
+
+    input[type="number"].user_price {
+        -moz-appearance: textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    .repair-table {
+        position: relative;
+    }
+
+    #ajaxloading {
+        position: absolute;
+        z-index: 99;
+        top: 0;
+        left: 50%;
+    }
+
+    #ajaxerror {
+        position: absolute;
+        z-index: 99;
+        top: 60px;
+        left: 0;
+        width: 100%;
+    }
+
+    #products-selected {
+        margin: 2rem 0 0;
+        width:100%;
+    }
+
+    #products-selected thead {
+        display: none;
+    }
+</style>
+
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<div class="page-title repair-head">
+    <h1><?php echo $this->__('产品报价'); ?></h1>
+</div>
+<div class="repair-form">
+    <form action="<?php echo Mage::helper('vendorquote')->getSaveUrl() ?>" method="post" id="new-form"
+          enctype="multipart/form-data">
+        <fieldset>
+            <?php echo $this->getBlockHtml('formkey'); ?>
+            <input type="hidden" name="customer_id" value="<?php echo $this->getCustomerId() ?>"/>
+            <h2 class="repair-title" style="margin-left:-15px;"><span
+                        class="repair-step"><span>1</span></span><span><?php echo $this->__('选择产品目录'); ?></span>
+            </h2>
+            <div class="row listBox" id="select_box">
+                <div class="col-sm-5 col-sm-offset-1" id="child_category_0" data-sorter="0">
+                    <h4>&nbsp;</h4>
+                    <div class="title">请选择<span class="nav-down-arrow"></span></div>
+                    <ul class="categoryList"></ul>
+                </div>
+            </div>
+            <div id="ie_ajax" style="width: 60px;height: 60px;margin:40px auto;">
+                <img src="/media/loading_ie.gif">
+            </div>
+            <div id="repair-block" class="row">
+                <h2 class="repair-title"><span
+                            class="repair-step"><span>2</span></span><span>选择需要报价的产品</span></h2>
+                <div class="repair-table">
+                    <table id="repairs">
+                        <thead>
+                        <tr>
+                            <td></td>
+                            <td class="sku">编码</td>
+                            <td class="name">产品名称</td>
+                            <td class="check">选择</td>
+                        </tr>
+                        </thead>
+                        <!--ajax product list-->
+                        <tbody></tbody>
+                    </table>
+                    <div id="ajaxloading">
+                        <div class="spinner">
+                            <div class="rect1"></div>
+                            <div class="rect2"></div>
+                            <div class="rect3"></div>
+                            <div class="rect4"></div>
+                            <div class="rect5"></div>
+                        </div>
+                    </div>
+
+                    <p id="ajaxerror" style="font-size: 20px;margin:40px auto;text-align: center;">没有数据</p>
+                </div>
+                <div class="repair-selected">
+                    <span style="font-weight: bold;">已选择报价的产品清单:</span>
+                    <span class="no-select">暂时没有选择任何产品。</span>
+                    <!--selected list-->
+                    <table id="products-selected">
+                        <thead>
+                        <tr>
+                            <td class="select_num">编号</td>
+                            <td class="sku">产品编码</td>
+                            <td class="name">产品名称</td>
+                            <td class="user_price_box">报价</td>
+                            <td class="remove_box">删除</td>
+                            <td class="edit_box">备注</td>
+                            <td class="note">备注</td>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="validation-advice selectWarn" style="display: none;">请选择产品并填上报价</div>
+                <div class="customerPart">
+                    <div class="device-info">
+                        <h2 class="repair-title"><span class="repair-step"><span>3</span></span><span>其他附加信息</span>
+                        </h2>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4><span class="req-item"></span>备注:</h4>
+                                <textarea name="description" id="description" cols="5" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="k-button k-primary" id="order">提交</button>
+                </div>
+        </fieldset>
+    </form>
+    <p id="login_status"
+       data-status="<?php if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>1<?php else: ?>0<?php endif; ?>"></p>
+</div>
+<style>
+    #reloading_modal .modal-content > img {
+        margin-left: -20px;
+    }
+
+    #myModal .login {
+        float: right;
+    }
+
+    #myModal .modal-dialog {
+        margin: 200px auto 0 auto;
+    }
+
+    #myModal .content {
+        min-height: 345px;
+        padding: 14px 21px;
+        border: 1px solid #ddd;
+        border-bottom: 0;
+        background: #ffffff;
+    }
+
+    #myModal .modal-body > h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: normal;
+    }
+
+    #myModal .buttons-set {
+        margin: 0 0 10px 0;
+        padding: 8px 0;
+        border: 1px solid #e4e4e4;
+    }
+
+    #myModal .buttons-set a {
+        line-height: 40px;
+        margin-left: 20px;
+    }
+
+    #myModal .btn-default {
+        background: #b0d95e;
+        color: #ffffff;
+    }
+
+    @media (min-width: 768px) {
+        #myModal .modal-dialog {
+            width: 700px;
+            margin: 30px auto;
+        }
+    }
+
+    #myModalLabel,#myModalLabel2 {
+        font-weight: normal;
+    }
+
+    #reloading_modal.fade.in {
+        opacity: 0.5;
+        background: #000;
+    }
+
+    #select_imgBox.fade.in {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    #select_imgBox .modal-dialog {
+        width: 400px;
+        padding: 10px;
+        border-radius: 10px 6px;
+        background: #fff;
+        margin:100px auto 30px;;
+    }
+
+    #select_imgBox .modal-content {
+        box-shadow: none;
+        border: none;
+        text-align: center;
+    }
+    #select_imgBox .modal-header{padding:4px;}
+    #select_imgBox .modal-footer{padding: 6px 10px 0 10px;}
+    #select_imgBox .modal_content img {
+        margin: 0 auto;
+    }
+    #product_note{display:block;width:100%;padding:20px 12px;height:100px;}
+    #select_imgBox #myModalLabel,#enter_box #myModalLabel2{font-size: 10px;}
+    #enter_box .modal-dialog{margin: 120px 10px 0 10px;}
+    #enter_box .modal-footer button{color:#fff;background:#2194d3;}
+    #reloading_modal .modal-dialog {
+        width: 40px;
+        margin: 400px auto 0 auto;
+    }
+
+    #reloading_modal .modal-content {
+        border: none;
+        background: none;
+        box-shadow: none;
+    }
+
+    .user_price {
+        display: inline-block;
+        width: 60px !important;
+        height: 30px;
+        line-height: 30px;
+        margin: 0 0 0 10px;
+    }
+
+    .note textarea {
+        width:150px;
+        height: 30px;
+        line-height: 30px;
+        text-indent: 10px;
+        padding: 0;
+        margin: 0 0 10px 0;
+        overflow: hidden;
+    }
+
+    #products-selected .remove {
+        display: block;
+        border-radius: 2px;
+        text-align: center;
+        margin: 0 12px;
+        background: none;
+        color: #ff0000;
+        font-size: 20px;
+        cursor: pointer;
+        transition:all 0.2s linear;
+    }
+    #products-selected .edit_box{display:none;}
+    #products-selected .remove:hover{
+        color:#6f6464;
+    }
+    #new-form .validation-advice {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    @media (max-width: 767px) {
+        #repairs td,#products-selected td{min-width:32px;padding:0;}
+        #select_box h4{
+            margin:0;
+        }
+        #myModal .login {
+            float: none;
+        }
+
+        #myModal .content {
+            min-height: initial;
+        }
+
+        #myModal .modal-dialog {
+            width: 96%;
+            margin: 120px auto 40px auto;
+        }
+
+        #myModal {
+            top: -100px;
+        }
+
+        .modal-content {
+            border-radius: 2px;
+        }
+
+        #reloading_modal .modal-content > img {
+            margin-left: 0;
+        }
+
+        #products-selected td {
+            padding: 0 2px !important;
+            margin: 0 !important;
+        }
+
+        #products-selected .sku {
+            width: 20%;
+            padding-bottom: 5px!important;
+        }
+        #products-selected .name{
+            width:50%;
+        }
+
+        #products-selected .user_price {
+            margin:0;
+            width: 40px !important;
+            height:24px;
+        }
+
+        #products-selected .note textarea {
+            text-indent: 0;
+        }
+
+        #products-selected .sku span, #products-selected .name span {
+            word-break: break-all;
+        }
+
+        #products-selected .select_num, #products-selected .note {
+            display: none;
+        }
+        #products-selected .edit_box{display:block;}
+        #products-selected tbody .edit_box{
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s linear;
+        }
+        #products-selected .remove {
+            margin: 0;
+            font-size:18px;
+            width:32px;
+        }
+        #products-selected .remove  .fa-times,#products-selected .edit_box .fa-pencil-square-o{
+            vertical-align:top;padding: 2px 4px 4px 4px;
+        }
+        #select_imgBox .modal-dialog{
+            width: 90%;
+            margin:25% 5% 0;
+        }
+    }
+</style>
+<!-- edit by Jerry -->
+<!-- reloading（Modal） -->
+<div class="modal fade" id="reloading_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <img src="/media/loading_ie.gif">
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- img show modal -->
+<div class="modal fade" id="select_imgBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" data-keyboard="false" data-backdrop="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <p class="modal-title" id="myModalLabel">
+                    点击 'ESC' 键 或点击右侧的按钮<br/>
+                    或点击灰色区域以关闭图片窗口
+                </p>
+            </div>
+
+            <div class="modal-body">
+                <img id="select_img" src="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-close" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- add other info to selected prodcut  -->
+<div class="modal fade" id="enter_box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2"
+     aria-hidden="true" data-keyboard="false" data-backdrop="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <p class="modal-title" id="myModalLabel2">
+                    点击 '保存' 键保存<br/>
+                    点击右侧的按钮或点击灰色区域以关闭图片窗口
+                </p>
+            </div>
+            <div class="modal-body">
+                <textarea id="product_note" maxlength="100"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- user login modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="myModalLabel3">
+                    请先登录
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6 login">
+                        <form action="<?php echo Mage::helper('vendorquote')->getSaveLogUrl() ?>" method="post">
+                            <div class="content">
+                                <h2>已注册用户</h2>
+                                <p>如果您已经拥有账户，请在下方登录。</p>
+                                <ul class="form-list">
+                                    <li>
+                                        <label for="email" class="required"><em>*</em>邮箱</label>
+                                        <div class="input-box">
+                                            <input class="input-text required-entry validate-email" id="email"
+                                                   type="email" name="login[username]" autocapitalize="off"
+                                                   autocorrect="off" spellcheck="false">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <label for="pass" class="required"><em>*</em>密码</label>
+                                        <div class="input-box">
+                                            <input class="input-text required-entry validate-password" id="pass"
+                                                   type="password" name="login[password]">
+                                        </div>
+                                    </li>
+                                </ul>
+                                <p class="required">* 必填项</p>
+                            </div>
+                            <div class="buttons-set">
+                                <button type="submit" class="button" name="send" id="sendLogin"
+                                        title="<?php echo $this->__('Log in'); ?>">
+                                    <span><span><?php echo $this->__('登录'); ?></span></span></button>
+                                <span class="f-left"><a
+                                            href="/customer/account/forgotpassword/"><?php echo $this->__('忘记密码?') ?></a></span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="content">
+                            <h2><?php echo $this->__('注册新用户') ?></h2>
+                            <p><?php echo $this->__('通过在我们的商店中创建帐户，您将能够更快地完成结帐流程，存储多个送货地址，在您的帐户中查看和跟踪您的订单等等。') ?></p>
+                        </div>
+                        <div class="buttons-set">
+                            <button type="button" title="<?php echo $this->__('Create an Account') ?>" class="button"
+                                    onclick="window.location='<?php echo $repairUrl . '/customer/account/create/' ?>';">
+                                <span><span><?php echo $this->__('创建账户') ?></span></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+    //<![CDATA[
+    var awrmaNewForm = new VarienForm('new-form', true);
+    //]]>
+</script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        ajaxCategory(2, 0);
+        /**
+         * find sessionStorage
+         * */
+        var ven_obj;
+        var select_array = [];
+        var selected = 0;
+        if (sessionStorage._vendorquote) {
+            $("#reloading_modal").modal('show');
+            ven_obj = JSON.parse(sessionStorage._vendorquote);
+            for (var _s = 0; _s < ven_obj.select_list.length; _s++) {
+                select_array.push(ven_obj.select_list[_s]);
+            }
+            selected = select_array.length;
+            showSelectedProduct();
+            $("#description").val(ven_obj.description);
+            $("#reloading_modal").modal('hide');
+        }
+
+        /**
+         * load category by id
+         * 'sorter' means category's depth,
+         * */
+        function ajaxCategory(id, sorter) {
+
+            var elStr = '#child_category_' + sorter;
+            if (jQuery.ajax) {
+                jQuery.ajax({
+                    type: "get",
+                    async: true,
+                    url: "<?php echo $repairUrl . 'vendorquote/index/category'?>",
+                    data: {id: id},
+                    dataType: "json",
+                    beforeSend: function () {
+                        if (sorter >= 1) {
+                            updateCategoryBox(sorter);
+                        }
+                        updateCategoryStatus(sorter, 0);
+                        $("#ajaxerror,#repairs>thead").hide();
+                        $("#repairs>tbody").empty();
+                    },
+                    complete: function () {
+                        updateCategoryStatus(sorter, 1);
+                    },
+                    success: function (data) {
+                        var tmpData = data;
+                        var tmpLen = tmpData.length;
+                        var htmlStr = '';
+                        if (tmpLen <= 0) {
+                            log("No Child Category!Loading products!");
+                            updateCategoryBox(sorter);
+                            ajaxProduct(id);
+                            return false;
+                        }
+                        for (var j = 0; j < tmpLen; j++) {
+                            htmlStr += '<li class="clearfix" data-id="' + tmpData[j].id + '"><span class="name">' + tmpData[j].name + '</span></li>';
+                        }
+                        /**
+                         * check category element exist or not exist
+                         * */
+                        if ($(elStr).length < 1) {
+                            $("#select_box").append(createCategoryBox(sorter));
+                        }
+                        $(elStr).find(".categoryList").html(htmlStr).end().show();
+                    },
+                    error: function () {
+                        log("AjaxCategory Error.");
+                    }
+                });
+            } else {
+                log("error : your browser not supported ajax.");
+            }
+        }
+
+        /**
+         * Ajax product by id.
+         * */
+        function ajaxProduct(id) {
+            if (jQuery.ajax) {
+                jQuery.ajax({
+                    type: "get",
+                    async: true,
+                    url: "<?php echo $repairUrl . 'vendorquote/index/product'?>",
+                    data: {id: id},
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#ie_ajax,#ajaxloading").addClass("loading");
+                    },
+                    complete: function () {
+                    },
+                    success: function (data) {
+                        var tmpData = data;
+                        var len = tmpData.length;
+                        var str = '';
+                        if (len <= 0) {
+                            $("#ajaxerror").show();
+                            $("#ie_ajax,#ajaxloading").removeClass("loading");
+                            return false;
+                        }
+                        for (var j = 0; j < len; j++) {
+                            str += '<tr>' +
+                                '<td class="img"><span><img style="width: 30px;height: 30px;margin-bottom: 6px;" src="' + tmpData[j].image + '"/></span></td>' +
+                                '<td class="sku">' + tmpData[j].sku + '</td>' +
+                                '<td class="name">' + tmpData[j].name + '</td>' +
+                                '<td class="check"><input class="my-select" value="' + tmpData[j].id + '" title="' + tmpData[j].name + '" id="' + tmpData[j].id + '" type="checkbox"><label for="' + tmpData[j].id + '"></label></td></tr>';
+
+                        }
+                        $("#repairs>tbody").html(str);
+                        $("#ie_ajax,#ajaxloading").removeClass("loading");
+                        $("#repairs>thead").show();
+                    },
+                    error: function () {
+                        alert("AjaxProdoct error!");
+                    }
+                });
+            } else {
+                log("error : your browser not supported ajax.");
+            }
+        }
+
+        /**
+         * click title and show the category list below
+         *
+         * click category list and ajax category
+         * */
+        $("#select_box").delegate(".title", "click", function () {
+            hideAllCategoryList();
+            var $head = $(this);
+            var $categoryList = $head.parent().find(".categoryList");
+            if ($categoryList.children("li").length > 0 && !$categoryList.closest(".col-sm-5").hasClass("disabled")) {
+                $categoryList.addClass("active");
+            }
+        }).delegate("li.clearfix", "click", function () {
+            var $li = $(this);
+            var $categoryBox = $li.parent().parent();
+            var _sorter = parseInt($categoryBox.attr("data-sorter"));
+            $categoryBox.find(".title").html($li.html() + '<span class="nav-down-arrow"></span>');
+            if (_sorter >= 0) {
+                ajaxCategory($li.attr("data-id"), _sorter + 1);
+            } else {
+                return false;
+            }
+            hideAllCategoryList();
+        });
+
+        function log(msg) {
+            if (window.console) {
+                console.log(msg);
+            }
+        }
+
+        /**
+         * hide all category list
+         * */
+        function hideAllCategoryList() {
+            $(".categoryList").removeClass("active");
+        }
+
+        /**
+         * create category box
+         * */
+        function createCategoryBox(sorter) {
+            var _tmpCategoryStr = '<h4>&nbsp;</h4><div class="title"><span class="name">请选择</span><span class="nav-down-arrow"></span></div><ul class="categoryList"></ul></div>';
+            if (sorter % 2 === 0) {
+                return '<div class="col-sm-5 col-sm-offset-1" id="child_category_' + sorter + '" data-sorter="' + sorter + '">' + _tmpCategoryStr;
+            } else {
+                return '<div class="col-sm-5" id="child_category_' + sorter + '" data-sorter="' + sorter + '">' + _tmpCategoryStr;
+            }
+        }
+
+        /**
+         * hide some category box and clear category list of it
+         * */
+        function updateCategoryBox(sorter) {
+            var _sorter = sorter;
+            var max_sorter = parseInt($("#select_box>div").last().attr("data-sorter"));
+
+            for (var k = _sorter; k <= max_sorter; k++) {
+                var elStr = "#child_category_" + k;
+                $(elStr).hide().find(".name").text('请选择').end().find(".categoryList").html('');
+            }
+        }
+
+        function updateCategoryStatus(sorter, status) {
+            if (status === 0) {
+                for (var m = 0; m <= sorter; m++) {
+                    var _elStr = "#child_category_" + m;
+                    $(_elStr).addClass("disabled");
+                }
+            } else if (status === 1) {
+                for (var n = 0; n <= sorter; n++) {
+                    var n_elStr = "#child_category_" + n;
+                    $(n_elStr).removeClass("disabled");
+                }
+            }
+        }
+
+        /**
+         *select product => add to "selected box"
+         *
+         * */
+        $(document).on('click', '.my-select', function () {
+            if ($(this).is(':checked') && select_array.length >= 0) {
+                var count = 0;
+                for (var _e = 0; _e < select_array.length; _e++) {
+                    if (select_array[_e].id === $(this).val()) {
+                        select_array[_e].status = '1';
+                        select_array[_e].user_price = '';
+                        count++;
+                    }
+                }
+                if (count === 0) {
+                    select_array[selected] = {
+                        id: $(this).val(),
+						sku:$(this).closest('tr').find(".sku").text(),
+                        name: $(this).attr('title'),
+                        price: $(this).closest('tr').find(".price").text(),
+                        status: '1',//是否显示
+                        user_price: '',
+                        info: ''
+                    };
+                    selected++;
+                }
+            } else {//change status when unchecked
+                for (var s = 0; s < select_array.length; s++) {
+                    if (select_array[s].id === $(this).val()) {
+                        select_array[s].status = '0';
+                    }
+                }
+            }
+            showSelectedProduct();
+        }).on('click', '.img img', function () {
+            var tmp_src = $(this).attr("src");
+            $("#select_img").attr("src", tmp_src);
+            $("#select_imgBox").modal({show: true, keyboard: true});
+        });
+
+        $('#products-selected').on('click', '.remove', function () {
+            for (var s = 0; s < select_array.length; s++) {
+                if (select_array[s].id === $(this).closest('tr').find(".id").val()) {
+                    select_array[s].status = '0';
+                    select_array[s].info = '';
+                    $("#repairs tr").each(function () {
+                        if ($(this).find(".my-select").val() === select_array[s].id) {
+                            $(this).find(".my-select").attr("checked", false);
+                        }
+                    });
+                }
+            }
+            showSelectedProduct();
+        }).on('blur', '.user_price', function () {
+            var _tmp_user_price = $(this).val();
+            var _tmp_id = $(this).closest('tr').find(".id").val();
+            for (var l = 0; l < select_array.length; l++) {
+                if (select_array[l].id === _tmp_id) {
+                    select_array[l].user_price = _tmp_user_price;
+                }
+            }
+            //showSelectedProduct();
+        }).on('blur', 'textarea', function () {
+            var _tmp_text = $(this).val();
+            var _tmp_id = $(this).closest('tr').find(".id").val();
+            for (var i = 0; i < select_array.length; i++) {
+                if (select_array[i].id === _tmp_id) {
+                    select_array[i].info = _tmp_text;
+                }
+            }
+        }).on('click','.fa-pencil-square-o',function(){
+            var _tmp_id = $(this).closest("tr").find(".id").val();
+            for (var i = 0; i < select_array.length; i++) {
+                if (select_array[i].id === _tmp_id) {
+                    $("#product_note").val(select_array[i].info);
+                }
+            }
+            $("#product_note").attr("data-id",$(this).closest('tr').find(".id").val());
+            $("#enter_box").modal({show: true, keyboard: true});
+        });
+        /**
+        * save product_note at enter_box
+        * */
+        $("#enter_box .modal-footer").delegate("button","click",function(){
+
+            var _id = $(this).closest(".modal-dialog").find("#product_note").attr("data-id");
+            var _tmp_text = $("#product_note").val();
+            for (var i = 0; i < select_array.length; i++) {
+                if (select_array[i].id === _id) {
+                    select_array[i].info = _tmp_text;
+                }
+            }
+            $("#enter_box").modal('hide');
+            $("#product_note").text('').val('');
+        });
+        /**
+         * show all selected product
+         * */
+        function showSelectedProduct() {
+            var _tmpSelected = '';
+            var count = 0;
+            for (var t = 0; t < select_array.length; t++) {
+                if (select_array[t].status === '1') {
+                    count++;
+                    _tmpSelected += '<tr><td class="select_num">' + count + '</td><td class="sku"><span>' + select_array[t].sku + '</span></td><td class="name"><span>' + select_array[t].name + '</span></td>' +
+                        '<td class="user_price_box"><input class="id" type="hidden" name="user_price[' + select_array[t].id + '][id]" value="' + select_array[t].id + '">' +
+                        '<input class="user_price required-entry" type="number" onchange="if(value<0)value=0.00;" tabindex="' + (t + 1) + '"  name="user_price[' + select_array[t].id + '][price]" value="' + select_array[t].user_price + '"></td>' +
+                        '<td class="remove_box"><span class="remove"><i class="fa fa-times" aria-hidden="true"></i></span></td><td class="edit_box"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></td><td class="note"><textarea maxlength="100" name="user_price[' + select_array[t].id + '][note]">' + select_array[t].info + '</textarea></td></tr>';
+                }
+            }
+            $('#products-selected tbody').html(_tmpSelected);
+            if ($("#products-selected tbody tr").length > 0) {
+                $('.no-select').hide();
+                $("#products-selected thead").show();
+            } else {
+                $('.no-select').show();
+                $("#products-selected thead").hide();
+            }
+        }
+
+        /**
+         *hide all repairlist when click other elements
+         * */
+        $(document).click(function (e) {
+            if (!$(e.target).hasClass("title") &&
+                !$(e.target).hasClass("categoryList") &&
+                !$(e.target).parent().hasClass("title") &&
+                !$(e.target).hasClass("nav-down-arrow") && !$(e.target).hasClass("name")
+            ) {
+                $(".categoryList").removeClass("active");
+            }
+        });
+        /**
+         * form validate and submit
+         * */
+        $("#order").click(function (event) {
+            var event = event || window.event;
+
+            //awrmaNewForm.validator.validate();// form validate
+
+            /**
+             * validate product list if there exist products selected by customer
+             * */
+            if ($("#products-selected tbody tr").length <= 0) {
+                $(".repair-selected").addClass("validation-failed");
+                $(".selectWarn").show();
+
+                event.preventDefault(); // Compatible standard Browsers
+                window.event.returnValue = false; // Compatible IE6~8
+                return false;
+            } else {
+                $(".repair-selected").removeClass("validation-failed");
+                $(".selectWarn").hide();
+            }
+            if ($("#login_status").attr("data-status") < 1 && $("#products-selected tbody tr").length > 0) {
+                $("#myModal").modal({show: true, keyboard: true});
+                //save info to sessionStorage
+                var ven_obj2 = {
+                    "select_list": select_array,
+                    "description": $("#description").val()
+                };
+
+                var ven_str = JSON.stringify(ven_obj2);
+                sessionStorage._vendorquote = ven_str;
+
+                event.preventDefault();
+                window.event.returnValue = false;
+            }
+            if ($("#login_status").attr("data-status") === '1') {
+                sessionStorage.removeItem("_vendorquote");
+                $("#myModal").modal('hide');
+            }
+        });
+    });
+</script>

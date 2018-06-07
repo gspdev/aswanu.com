@@ -1,0 +1,32 @@
+<?php
+$urlRequest = Mage::app()->getFrontController()->getRequest();
+$_pathInfo = $urlRequest->getPathInfo();
+//echo $_pathInfo;
+
+$_path = "";
+//echo $_pathInfo . "</p>";
+//echo strpos($_pathInfo , "log");exit;
+
+if (stripos($_pathInfo , "log")):
+	if (stripos($_pathInfo , 'product')) {
+		$_path = 'product';
+	} else {
+		$_path = "category";
+	}
+	
+	$_position  = array(
+		'product'	=> 6,
+		'category'	=> 5
+	);
+
+$image = Mage::getModel('banner/manager')
+	->getCollection()
+	->addAttributeToFilter('position' , $_position[$_path])
+	->addAttributeToFilter('status' , 1)
+	->setPageSize(2);
+
+//echo $image->getSelect()->__toString();
+//print_r($image->getItems());exit;
+
+?>
+<?php endif;?>

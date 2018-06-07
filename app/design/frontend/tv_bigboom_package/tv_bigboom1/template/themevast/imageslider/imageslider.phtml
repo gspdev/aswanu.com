@@ -1,0 +1,157 @@
+<?php 
+if(!$this->getConfig('enabled')) return;
+$slider = $this->getSlider();
+if(!count($slider)) return;				
+$media = Mage::getBaseUrl('media');	
+$caption = $this->getConfig('caption');
+$_mobile_imgUrl = Mage::getBaseUrl();
+?>
+<figure class="banner-slideshow">
+	<div class="flexslider tv-nivoslider image-effect">
+		<div class="ajax_loading"><i class="fa fa-spinner fa-spin"></i></div>
+		<div id="tv-inivoslider" class="sliders">
+		<?php
+			$i = 1;
+			foreach($slider as $slide) {
+				$img = $media .$slide['image']; ?>
+				<div class="nivo-item">
+					<a href="<?php echo $slide['link']?>" title="<?php //echo $this->__('Read more') ?>">
+                    <img style="display: none;" src="<?php echo $img?>"  title="#caption<?php echo $i; ?>" alt="image" /></a>	
+					<?php if($caption) { ?>
+						<div id="caption<?php echo $i; ?>" class="caption-item" style="display: none;">
+							<div class="<?php echo $slide['effect']?>">
+								<?php //edit by mivec
+								/*
+								?>
+                                <div class="title"><?php echo $this->__($slide['title']) ?></div>
+								<div class="description"><?php echo $this->__($slide['description']) ?></div>
+								<?php if( $slide['link'] ) { ?>
+									<div class="readmore">
+										<a href="<?php echo $slide['link']?>" title="<?php echo $this->__('Get a look !') ?>"><?php echo $this->__('Get a look !') ?></a>	
+									</div>
+								<?php } ?>
+                                <?php */?>
+							</div>
+						</div>	
+					<?php } ?>									
+				</div>
+				<?php $i++; ?>
+				<?php
+			} // end foreach
+		?>
+		</div>
+	</div>
+</figure>
+<figure class="mobile-banner-slideshow">
+    <ul class="mobile-banner-list">
+        <li>
+            <a href="<?php echo $_mobile_imgUrl.'for-iphone-x-3d-0-2mm-tempered-glass-screen-protector-black.html'?>">
+                <div class="row item">
+                    <div class="col-xs-4 col-xs-offset-2 text" style="color:#000;">
+                        <p>Super Glass</p>
+                        <p style="font-size: 12px;">for iPhone X</p>
+                    </div>
+                    <div class="col-xs-3 col-xs-offset-1 img">
+                        <img width="120" src="<?php echo $_mobile_imgUrl.'media/themevast/m_banner/super_glass.png'?>" title="super glass">
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo $_mobile_imgUrl.'for-samsung-note8-black-transparent-3d-0-33mm.html'?>">
+                <div class="row item">
+                    <div class="col-xs-4 col-xs-offset-2 text" style="color:#000;">
+                        <p>Super Glass</p>
+                        <p style="font-size: 12px;">for Samsung Note 8</p>
+                    </div>
+                    <div class="col-xs-3 col-xs-offset-1 img">
+                        <img width="120" src="<?php echo $_mobile_imgUrl.'media/themevast/m_banner/super_glass2.png'?>" title="super glass">
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+</figure>
+<script type="text/javascript">
+jQuery( document ).ready(function($) {
+    var newWidth = $(document).width();
+    if(newWidth > 767){
+
+        $(".banner-slideshow").show();
+        (function(selector){
+            var $content = $(selector);
+            $content.find('#tv-inivoslider').nivoSlider({
+                slices: 1,
+                boxCols: 8,
+                boxRows: 4,
+                startSlide: 0,
+                controlNavThumbs: false,
+                pauseOnHover: true,
+                manualAdvance: false,
+                prevText: 'Prev',
+                nextText: 'Next',
+                effect: '<?php echo $this->getConfig('effect') ?>',
+                animSpeed: 0,//<?php echo $this->getConfig('animSpeed') ?>,
+                pauseTime: <?php echo $this->getConfig('pauseTime') ?>,
+                controlNav: <?php echo $this->getConfig('controlNav') ?>,
+                directionNav: <?php echo $this->getConfig('directionNav') ?>,
+                afterLoad:function(){
+                    $content.find(".nivo-item").first().addClass("onSelect");
+                },
+                afterChange:function(){
+                    var tmpActive = $content.find('.nivo-control.active').text()-1;
+                    if(tmpActive>=0){
+                        $content.find(".nivo-item").removeClass("onSelect").
+                        eq(tmpActive).addClass("onSelect");
+                    }
+                },
+                //afterLoad: function(){
+                //	$('.ajax_loading').css("display","none");
+                //},
+                //beforeChange: function(){
+                //	$content.find('.nivo-item .title').css("top","-500px" );
+                //	$content.find('.nivo-item .description').css("top","-1000px");
+                //	$content.find('.nivo-item .readmore').css("top","-2000px");
+                //},
+                //afterChange: function(){
+                //	$content.find('.nivo-item .title').css("top","330px");
+                //	$content.find('.nivo-item .description').css("top","390px");
+                //	$content.find('.nivo-item .readmore').css("top","250px");
+                //}
+            });
+            $(".banner-slideshow").addClass("loaded");
+        })('.tv-nivoslider');
+    }else if(newWidth <= 767){
+        //mobile slider
+        $(".mobile-banner-slideshow").show();
+        (function(selector){
+            var $content = $(selector);
+            var $slider  = $('.mobile-banner-list', $content);
+            var slider 	 = $slider.bxSlider({
+                auto: 1, speed: 1500, controls: 0, pager: 0, maxSlides: 1,infiniteLoop: true,
+                moveSlides:1,
+                slideMargin: 0,
+                autoHover: false, // stop while hover <=> slider.stopAuto(); + slider.startAuto();
+            });
+
+        })(".mobile-banner-slideshow");
+        $(".mobile-banner-slideshow").addClass("loaded");
+    }
+
+    $(window).resize(function () {
+        newWidth = $(document).width();
+        if(newWidth > 767){
+            $(".mobile-banner-slideshow").hide();
+            if($(".banner-slideshow").hasClass("loaded")){
+                $(".banner-slideshow").show();
+            }
+        }else if(newWidth <= 767){
+            $(".banner-slideshow").hide();
+            if($(".mobile-banner-slideshow").hasClass("loaded")){
+                $(".mobile-banner-slideshow").show();
+            }
+        }
+    });
+});
+</script>
+
