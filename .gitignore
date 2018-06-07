@@ -1,0 +1,9 @@
+/app/etc/local.xml
+/downloader/*.cfg
+/media/
+/var/
+/.idea/
+index.php
+robots.txt
+sitemap.xml
+.htaccess
