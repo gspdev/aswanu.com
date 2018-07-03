@@ -3,9 +3,9 @@ require 'config.php';
 
 //found out & export that product name contain `LCD` or `display`
 
-$_keywords = "flex";
+$_keywords = "LCD";
 //values LCD&display=1000,back cover=999,battery=998,flex=997
-$_value = 997;
+$_value = 1000;
 
 /*$collection = Mage::getModel("catalog/product")
     ->getCollection()
