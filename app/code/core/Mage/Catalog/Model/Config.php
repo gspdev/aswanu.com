@@ -344,12 +344,13 @@ class Mage_Catalog_Model_Config extends Mage_Eav_Model_Config
 
         // edit by mivec
         $options = array(
-            //'number_of_match'	=> Mage::helper('catalog')->__('Best Match'),
+            'sort_bestmatch'	=> Mage::helper('catalog')->__('Default'),
+            //"searchweight_index"   => Mage::helper('catalog')->__("Default"),
             'entity_id'  => Mage::helper('catalog')->__('Release Date'),
             'price'	=> Mage::helper('catalog')->__('Price'),
-            'sort_popular'	=> Mage::helper('catalog')->__('Most Popluar'),
+            //'sort_popular'	=> Mage::helper('catalog')->__('Most Popluar'),
             //'sort_review'	=> Mage::helper('catalog')->__('Reviews'),  //mivec add
-            'sort_seller'	=> Mage::helper('catalog')->__('Best Seller'),
+            //'sort_seller'	=> Mage::helper('catalog')->__('Best Seller'),
         );
 
         foreach ($this->getAttributesUsedForSortBy() as $attribute) {
