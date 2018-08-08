@@ -17,7 +17,7 @@ function getCategoryData($_id , $_attributeId = "", $_database)
     ";
 
     if (!empty($_attributeId)) {
-        $sql .= " AND b.attribute_id=" . $_attributeId;
+        $sql .= " AND B.attribute_id=" . $_attributeId;
         return db()->fetchRow($sql);
     }
 
