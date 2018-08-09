@@ -1,7 +1,7 @@
 <?php
 require 'config.php';
 
-//found out & export that product name contain `LCD` or `display`
+//update sort_bestmatch value
 
 $_keywords = "LCD";
 //values LCD&display=1000,back cover=999,battery=998,flex=997
