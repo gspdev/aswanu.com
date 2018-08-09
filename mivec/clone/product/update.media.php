@@ -1,6 +1,8 @@
 <?php
 require 'config.php';
 Zend_Loader::loadClass("Mivec_Http_Client");
+define("__DATA_ENTITY_TYPE_ID__" , 4);
+define("__DATA_STORE_ID__" , 0);
 
 //download product's image from g-sp.se
 define("__SEPARATOR_DIR__" , "/");
@@ -21,16 +23,64 @@ define("__DIR_MEDIA_PRODUCT__" , Mage::getBaseDir("media")
 if ($content = getCsvContent(__DATA_PATH__ . __FILE_SOURCE_EXPORT__)) {
     $i = 1;
     foreach ($content as $row) {
+        $_productId = $row[0];
         $_sku = $row[1];
         $_mediaValue = $row[11];
 
-        if (getProductImage($_mediaValue)) {
+/*        if (getProductImage($_mediaValue)) {
             echo $_sku . " was success to save image</br>";
+            usleep(5);
+        }*/
+
+        if (setDefaultImg($_productId)) {
+            echo $_sku . " set image succeed<br>";
             usleep(5);
         }
 
         //if ($i == 5) break;
         $i++;
+    }
+}
+
+function setDefaultImg($_entityId)
+{
+    $_attributes = array(
+        "small_img" => __ATTR_PRODUCT_MEDIA_SMALL_IMG__,
+        "image"     => __ATTR_PRODUCT_MEDIA_IMG__,
+        "thumbnail" => __ATTR_PRODUCT_MEDIA_THUMBNAIL__
+    );
+
+    $sql = "SELECT * FROM " . __TABLE_PRODUCT_MEDIA__ . "
+        WHERE entity_id = $_entityId
+        ORDER BY `value_id` DESC";
+
+    $_status = false;
+    if ($row = db()->fetchRow($sql)) {
+        $_img = $row['value'];
+        //update
+        foreach ($_attributes as $_attribute) {
+            $sql = "SELECT COUNT(*) FROM " . __TABLE_PRODUCT_VARCHAR__
+            ." WHERE attribute_id=" . $_attribute
+            ." AND entity_id=" . $_entityId;
+
+            if (db()->fetchOne($sql) == 0) {
+                //insert
+                $data = array(
+                    "entity_type_id" => __DATA_ENTITY_TYPE_ID__,
+                    "attribute_id"   => $_attribute,
+                    "store_id"       => __DATA_STORE_ID__,
+                    "entity_id"      => $_entityId,
+                    "value"          => $_img,
+                );
+
+                try {
+                    $_status = db()->insert(__TABLE_PRODUCT_VARCHAR__ , $data);
+                } catch (Exception $e){
+                    die ($e->getCode() . $e->getMessage());
+                }
+            }
+        }
+        return $_status;
     }
 }
 

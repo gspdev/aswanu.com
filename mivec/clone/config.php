@@ -74,6 +74,10 @@ define("__ATTR_PRODUCT_PRICE__" , 75); //decimal
 define("__ATTR_PRODUCT_TAX__" , 121); //int
 define("__ATTR_PRODUCT_MEDIA__" , 88);
 
+//images
+define("__ATTR_PRODUCT_MEDIA_SMALL_IMG__" , 86);//varchar
+define("__ATTR_PRODUCT_MEDIA_IMG__" , 85);
+define("__ATTR_PRODUCT_MEDIA_THUMBNAIL__" , 87);
 
 function getProductIds()
 {
