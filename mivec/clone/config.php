@@ -74,6 +74,9 @@ define("__ATTR_PRODUCT_PRICE__" , 75); //decimal
 define("__ATTR_PRODUCT_TAX__" , 121); //int
 define("__ATTR_PRODUCT_MEDIA__" , 88);
 
+//price
+define("__ATTR_PRODUCT_PRICE__" , 75); //decimal
+
 //images
 define("__ATTR_PRODUCT_MEDIA_SMALL_IMG__" , 86);//varchar
 define("__ATTR_PRODUCT_MEDIA_IMG__" , 85);
