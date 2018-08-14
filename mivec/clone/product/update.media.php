@@ -32,13 +32,47 @@ if ($content = getCsvContent(__DATA_PATH__ . __FILE_SOURCE_EXPORT__)) {
             usleep(5);
         }*/
 
-        if (setDefaultImg($_productId)) {
+        if (updateMediaPosition($_productId)) {
+            echo $_sku . " Update image position succeed<br>";
+            usleep(10);
+        }
+
+/*        if (setDefaultImg($_productId)) {
             echo $_sku . " set image succeed<br>";
             usleep(5);
-        }
+        }*/
 
         //if ($i == 5) break;
         $i++;
+    }
+}
+
+function updateMediaPosition($_entityId)
+{
+    $sql = "SELECT a.value_id,a.entity_id,b.position FROM " .
+        __TABLE_PRODUCT_MEDIA__ . " a LEFT JOIN " . __TABLE_PRODUCT_MEDIA_VALUE__ . " b"
+        ." ON (a.value_id = b.value_id) "
+        ." WHERE a.entity_id=$_entityId";
+
+    if ($row = db()->fetchAll($sql)) {
+        $_status = false;
+        $i=1;
+        foreach ($row as $rs) {
+            //update
+            $data['value_id'] = $rs['value_id'];
+            $data['store_id'] = __DATA_STORE_ID__;
+            $data["position"] = $i;
+
+            $sql = "REPLACE INTO " . __TABLE_PRODUCT_MEDIA_VALUE__
+                 . "(`value_id`,store_id,`position`) VALUES
+                 (".$data['value_id'].",".$data['store_id'].",".$data['position'].")";
+
+            if (db()->query($sql)) {
+                $_status = true;
+            }
+            $i++;
+        }
+        return $_status;
     }
 }
 
