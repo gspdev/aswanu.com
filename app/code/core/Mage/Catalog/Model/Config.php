@@ -344,7 +344,7 @@ class Mage_Catalog_Model_Config extends Mage_Eav_Model_Config
 
         // edit by mivec
         $options = array(
-            
+
             'sort_bestmatch'	=> Mage::helper('catalog')->__('Default'),
             //"searchweight_index"   => Mage::helper('catalog')->__("Default"),
             'entity_id'  => Mage::helper('catalog')->__('Release Date'),

@@ -1,0 +1,131 @@
+<?xml version="1.0" ?>
+<config>
+    <modules>
+        <Mivec_Supplier>
+            <version>0.1</version>
+        </Mivec_Supplier>
+    </modules>
+    <frontend>
+        <routers>
+            <supplier>
+                <use>standard</use>
+                <args>
+                    <module>Mivec_Supplier</module>
+                    <frontName>supplier</frontName>
+                </args>
+            </supplier>
+        </routers>
+        <layout>
+            <updates>
+                <supplier>
+                    <file>mivec/supplier.xml</file>
+                </supplier>
+            </updates>
+        </layout>
+    </frontend>
+
+    <admin>
+        <routers>
+            <supplier>
+                <use>admin</use>
+                <args>
+                    <module>Mivec_Supplier</module>
+                    <frontName>supplier</frontName>
+                </args>
+            </supplier>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <mivec module="supplier">
+                <title>MIVEC</title>
+                <sort_order>71</sort_order>
+                <children>
+                    <supplier translate="title" module="supplier">
+                        <title>Supplier</title>
+                        <sort_order>71</sort_order>
+                        <children>
+                            <supplier module="supplier" translate="title">
+                                <title>Supplier</title>
+                                <sort_order>1</sort_order>
+                                <action>supplier/adminhtml_supplier</action>
+                            </supplier>
+                            <market module="supplier" translate="title">
+                                <title>Market</title>
+                                <sort_order>1</sort_order>
+                                <action>supplier/adminhtml_market</action>
+                            </market>
+                            <product_quote module="supplier" translate="title">
+                                <title>Product Quotes</title>
+                                <sort_order>3</sort_order>
+                                <action>supplier/adminhtml_quote</action>
+                            </product_quote>
+                        </children>
+                    </supplier>
+                </children>
+            </mivec>
+        </menu>
+
+        <layout>
+            <updates>
+                <supplier>
+                    <file>mivec_supplier.xml</file>
+                </supplier>
+            </updates>
+        </layout>
+    </adminhtml>
+
+    <global>
+        <models>
+            <supplier>
+                <class>Mivec_Supplier_Model</class>
+                <resourceModel>supplier_mysql4</resourceModel>
+            </supplier>
+            <supplier_mysql4>
+                <class>Mivec_Supplier_Model_Mysql4</class>
+                <entities>
+                    <supplier>
+                        <table>mivec_supplier</table>
+                    </supplier>
+                    <market>
+                        <table>mivec_supplier_market</table>
+                    </market>
+                    <quote>
+                        <table>mivec_supplier_quote</table>
+                    </quote>
+                </entities>
+            </supplier_mysql4>
+        </models>
+        <resources>
+            <supplier_setup>
+                <setup>
+                    <module>Mivec_Supplier</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </supplier_setup>
+            <supplier_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </supplier_write>
+            <supplier_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </supplier_read>
+        </resources>
+        <blocks>
+            <supplier>
+                <class>Mivec_Supplier_Block</class>
+            </supplier>
+        </blocks>
+        <helpers>
+            <supplier>
+                <class>Mivec_Supplier_Helper</class>
+            </supplier>
+        </helpers>
+    </global>
+
+</config>
