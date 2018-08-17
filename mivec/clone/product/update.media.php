@@ -27,17 +27,17 @@ if ($content = getCsvContent(__DATA_PATH__ . __FILE_SOURCE_EXPORT__)) {
         $_sku = $row[1];
         $_mediaValue = $row[11];
 
-/*        if (getProductImage($_mediaValue)) {
+        if (getProductImage($_mediaValue)) {
             echo $_sku . " was success to save image</br>";
             usleep(5);
-        }*/
+        }
 
-        if (updateMediaPosition($_productId)) {
+/*        if (updateMediaPosition($_productId)) {
             echo $_sku . " Update image position succeed<br>";
             usleep(10);
         }
 
-/*        if (setDefaultImg($_productId)) {
+        if (setDefaultImg($_productId)) {
             echo $_sku . " set image succeed<br>";
             usleep(5);
         }*/
