@@ -31,5 +31,10 @@
             <codePool>local</codePool>
         </Mivec_Orderhook>
 
+        <Mivec_Supplier>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Mivec_Supplier>
+
     </modules>
 </config>

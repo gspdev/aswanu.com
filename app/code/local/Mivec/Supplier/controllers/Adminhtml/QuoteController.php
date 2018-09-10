@@ -1,11 +1,11 @@
 <?php
-class Mivec_Supplier_Adminhtml_SupplierController extends Mage_Adminhtml_Controller_Action
+class Mivec_Supplier_Adminhtml_QuoteController extends Mage_Adminhtml_Controller_Action
 {
     protected function _init()
     {
         $this->loadLayout()
             ->_setActiveMenu("mivec/supplier")
-            ->_addBreadcrumb("Manage Supplier" , "");
+            ->_addBreadcrumb("Manage Product Quotes" , "");
 
         return $this;
     }
@@ -20,7 +20,7 @@ class Mivec_Supplier_Adminhtml_SupplierController extends Mage_Adminhtml_Control
     {
         $this->_init();
         $id     = $this->getRequest()->getParam('id');
-        $model  = Mage::getModel('supplier/supplier')->load($id);
+        $model  = Mage::getModel('supplier/quote')->load($id);
 
         if ($model->getId() || $id == 0) {
             $data = Mage::getSingleton('adminhtml/session')->getFormData(true);
@@ -28,11 +28,11 @@ class Mivec_Supplier_Adminhtml_SupplierController extends Mage_Adminhtml_Control
                 $model->setData($data);
             }
 
-            Mage::register('supplier_data', $model);
+            Mage::register('quote_data', $model);
             $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
 
-            $this->_addContent($this->getLayout()->createBlock('supplier/adminhtml_supplier_edit'))
-                ->_addLeft($this->getLayout()->createBlock('supplier/adminhtml_supplier_edit_tabs'));
+            $this->_addContent($this->getLayout()->createBlock('supplier/adminhtml_quote_edit'))
+                ->_addLeft($this->getLayout()->createBlock('supplier/adminhtml_quote_edit_tabs'));
 
             $this->renderLayout();
         } else {
@@ -50,7 +50,7 @@ class Mivec_Supplier_Adminhtml_SupplierController extends Mage_Adminhtml_Control
     {
         //print_r($this->getRequest()->getPost());exit;
         if ($data = $this->getRequest()->getPost()) {
-            $model = Mage::getModel('supplier/supplier');
+            $model = Mage::getModel('supplier/quote');
 
             $model->setData($data)
                 ->setId($this->getRequest()->getParam('id'));
@@ -81,7 +81,7 @@ class Mivec_Supplier_Adminhtml_SupplierController extends Mage_Adminhtml_Control
     {
         if( $this->getRequest()->getParam('id') > 0 ) {
             try {
-                $model = Mage::getModel('supplier/supplier');
+                $model = Mage::getModel('supplier/quote');
 
                 $model->setId($this->getRequest()->getParam('id'))
                     ->delete();

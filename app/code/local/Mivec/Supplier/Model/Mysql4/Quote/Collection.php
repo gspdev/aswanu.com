@@ -1,10 +1,10 @@
 <?php
-class Mivec_Supplier_Model_Mysql4_Supplier_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
+class Mivec_Supplier_Model_Mysql4_Quote_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
 {
     public function _construct()
     {
         parent::_construct();
-        $this->_init("supplier/supplier");
+        $this->_init("supplier/quote");
     }
 
     public function addAttributeToFilter($key , $value , $method = 'and')
@@ -34,6 +34,34 @@ class Mivec_Supplier_Model_Mysql4_Supplier_Collection extends Mage_Core_Model_My
                     $this->_select = $this->getSelect()->where($key . '=?' , $value);
                 }
         }
+        return $this;
+    }
+
+    public function getCount()
+    {
+        $sql = $this->_select->__toString();
+        $count = $this->getConnection()->fetchOne($sql);
+        return $count;
+    }
+
+    public function fetch()
+    {
+        $sql = $this->_select->__toString();
+        //echo $sql;exit;
+
+        $this->_fetch = $this->getConnection()->fetchAll($sql);
+        return $this;
+    }
+
+    public function getItems()
+    {
+        self::fetch();
+        return $this->_fetch;
+    }
+
+    public function setOrder($key , $dir = 'DESC')
+    {
+        $this->getSelect()->order("{$key} $dir");
         return $this;
     }
 }

@@ -39,7 +39,7 @@
         <menu>
             <mivec module="supplier">
                 <title>MIVEC</title>
-                <sort_order>71</sort_order>
+                <sort_order>999</sort_order>
                 <children>
                     <supplier translate="title" module="supplier">
                         <title>Supplier</title>
